@@ -26,15 +26,10 @@
             background-repeat: no-repeat;
             background-attachment: scroll;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        /* Calculate body height based on image aspect ratio */
-        body::before {
-            content: '';
-            display: block;
-            width: 100%;
-            padding-bottom: 177.78%; /* Adjust this based on your image's aspect ratio (height/width * 100) */
-        }        /* Mobile-first responsive design */
+        }        /* Set body height to match actual image height */
+        body {
+            height: 14400px; /* Match your image's actual height */
+        }/* Mobile-first responsive design */
         .container {
             position: absolute;
             top: 0;
