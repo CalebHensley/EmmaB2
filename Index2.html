@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Emma's Website - A beautiful mobile-optimized experience">
+    <meta name="author" content="Emma">
+    <title>Emma's Website</title>
+    <link rel="preload" as="image" href="BlackBG1.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }        html, body {
+            height: auto;
+            min-height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-image: url('BlackBG1.png?v=2');
+            background-size: 100vw auto;
+            background-position: top center;
+            background-repeat: no-repeat;
+            background-attachment: scroll;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Photo gallery container */
+        .gallery {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 10vh 0 50vh 0;
+            position: relative;
+            z-index: 1;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .gallery::-webkit-scrollbar {
+            display: none;
+        }
+
+        .photo {
+            width: 80vw;
+            height: 80vh;
+            margin-right: 10vw;
+            flex-shrink: 0;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            scroll-snap-align: center;
+        }
+
+        .photo:first-child {
+            margin-left: 10vw;
+        }
+
+        .photo:last-child {
+            margin-right: 10vw;
+        }
+
+        .photo.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Fullscreen zoom modal */
+        .zoom-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            overflow: hidden;
+            touch-action: pinch-zoom;
+        }
+
+        .zoom-modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .zoom-modal img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            cursor: zoom-out;
+            touch-action: pinch-zoom;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* Phone-specific optimizations */
+        @media (max-width: 768px) {
+            body {
+                background-attachment: scroll; /* Better performance on mobile */
+            }
+            
+            .photo {
+                width: 80vw;
+                height: 80vh;
+            }
+        }
+
+        /* Netlify badge - remove this if you don't want it */
+        .netlify-badge {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.6);
+            z-index: 1000;
+        }
+
+        @media (max-width: 768px) {
+            .netlify-badge {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="gallery">
+        <img src="p1.jpg" alt="Photo 1" class="photo">
+        <img src="P2.jpg" alt="Photo 2" class="photo">
+        <img src="p7.jpg" alt="Photo 7" class="photo">
+        <img src="P3.png" alt="Photo 3" class="photo">
+        <img src="P4.png" alt="Photo 4" class="photo">
+        <img src="p5.png" alt="Photo 5" class="photo">
+        <img src="p6.png" alt="Photo 6" class="photo">
+    </div>
+
+    <!-- Fullscreen zoom modal -->
+    <div class="zoom-modal" id="zoomModal">
+        <img src="" alt="Zoomed photo" id="zoomedImage">
+    </div>
+
+    <div class="netlify-badge">
+        Deployed on Netlify
+    </div>
+
+    <script>
+        // Progressive enhancement and performance optimizations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Lazy load background image for better performance
+            const img = new Image();
+            img.onload = function() {
+                document.body.classList.add('bg-loaded');
+            };
+            img.src = 'BlackBG1.png?v=2';
+
+            // Add smooth scroll behavior
+            document.documentElement.style.scrollBehavior = 'smooth';
+
+            // Scroll-triggered fade-in for photos
+            const photos = document.querySelectorAll('.photo');
+            const gallery = document.querySelector('.gallery');
+            
+            function checkPhotos() {
+                const galleryRect = gallery.getBoundingClientRect();
+                
+                photos.forEach(photo => {
+                    const photoRect = photo.getBoundingClientRect();
+                    const isVisible = photoRect.left < window.innerWidth * 0.9 && photoRect.right > window.innerWidth * 0.1;
+                    
+                    if (isVisible) {
+                        photo.classList.add('visible');
+                    }
+                });
+            }
+            
+            // Check on gallery scroll
+            gallery.addEventListener('scroll', checkPhotos);
+            
+            // Initial check
+            checkPhotos();
+
+            // Zoom functionality
+            const zoomModal = document.getElementById('zoomModal');
+            const zoomedImage = document.getElementById('zoomedImage');
+            
+            // Click photo to zoom in
+            photos.forEach(photo => {
+                photo.addEventListener('click', function() {
+                    zoomedImage.src = this.src;
+                    zoomModal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+            
+            // Click zoomed image or modal to close
+            zoomModal.addEventListener('click', function() {
+                zoomModal.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+
+        // Handle orientation changes on mobile
+        window.addEventListener('orientationchange', function() {
+            setTimeout(function() {
+                window.scrollTo(0, 0);
+            }, 100);
+        });
+    </script>
+</body>
+</html>
