@@ -30,18 +30,15 @@
 
         /* Photo gallery container */
         .gallery {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            padding: 10vh 0 50vh 0;
             position: relative;
+            width: 100vw;
+            height: 100vh;
+            padding: 10vh 0 0 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
             z-index: 1;
-            overflow-x: auto;
-            overflow-y: hidden;
-            scroll-snap-type: x mandatory;
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
         }
 
         .gallery::-webkit-scrollbar {
@@ -49,16 +46,14 @@
         }
 
         .photo {
+            position: absolute;
             width: 80vw;
             height: 80vh;
-            margin-right: 10vw;
-            flex-shrink: 0;
             object-fit: cover;
             border-radius: 8px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
             opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
+            transition: opacity 0.5s ease;
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
             -webkit-touch-callout: none;
@@ -66,20 +61,12 @@
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
-            scroll-snap-align: center;
+            pointer-events: none;
         }
 
-        .photo:first-child {
-            margin-left: 10vw;
-        }
-
-        .photo:last-child {
-            margin-right: 10vw;
-        }
-
-        .photo.visible {
+        .photo.active {
             opacity: 1;
-            transform: translateY(0);
+            pointer-events: auto;
         }
 
         /* Fullscreen zoom modal */
@@ -177,28 +164,43 @@
             // Add smooth scroll behavior
             document.documentElement.style.scrollBehavior = 'smooth';
 
-            // Scroll-triggered fade-in for photos
+            // Swipe carousel functionality
             const photos = document.querySelectorAll('.photo');
             const gallery = document.querySelector('.gallery');
+            let currentIndex = 0;
+            let touchStartX = 0;
+            let touchEndX = 0;
             
-            function checkPhotos() {
-                const galleryRect = gallery.getBoundingClientRect();
-                
-                photos.forEach(photo => {
-                    const photoRect = photo.getBoundingClientRect();
-                    const isVisible = photoRect.left < window.innerWidth * 0.9 && photoRect.right > window.innerWidth * 0.1;
-                    
-                    if (isVisible) {
-                        photo.classList.add('visible');
-                    }
+            function showPhoto(index) {
+                photos.forEach((photo, i) => {
+                    photo.classList.remove('active');
                 });
+                photos[index].classList.add('active');
             }
             
-            // Check on gallery scroll
-            gallery.addEventListener('scroll', checkPhotos);
+            function handleSwipe() {
+                if (touchEndX < touchStartX - 50) {
+                    // Swipe left - next photo
+                    currentIndex = (currentIndex + 1) % photos.length;
+                    showPhoto(currentIndex);
+                } else if (touchEndX > touchStartX + 50) {
+                    // Swipe right - previous photo
+                    currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+                    showPhoto(currentIndex);
+                }
+            }
             
-            // Initial check
-            checkPhotos();
+            gallery.addEventListener('touchstart', function(e) {
+                touchStartX = e.changedTouches[0].screenX;
+            });
+            
+            gallery.addEventListener('touchend', function(e) {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            });
+            
+            // Initial photo display
+            showPhoto(0);
 
             // Zoom functionality
             const zoomModal = document.getElementById('zoomModal');
