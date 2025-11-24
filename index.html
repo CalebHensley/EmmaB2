@@ -33,7 +33,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 5vh 0 50vh 0; /* Start 5vh below top, end half picture below last photo */
+            padding: 15vh 0 50vh 0; /* Start 15vh below top, end half picture below last photo */
             position: relative;
             z-index: 1;
         }
@@ -49,6 +49,12 @@
             transform: translateY(50px);
             transition: opacity 0.5s ease, transform 0.5s ease;
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         .photo.visible {
@@ -82,6 +88,11 @@
             object-fit: contain;
             cursor: zoom-out;
             touch-action: pinch-zoom;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         /* Phone-specific optimizations */
