@@ -3,20 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Emma's Website - A beautiful mobile-optimized experience">
-    <meta name="author" content="Emma">
-    <title>Emma's Website</title>
+    <meta name="description" content="Emma Beckham - Model Portfolio">
+    <meta name="author" content="Emma Beckham">
+    <title>Emma Beckham</title>
     <link rel="preload" as="image" href="BlackBG2.png">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }        html, body {
-            height: auto;
-            min-height: 100%;
+        }
+        
+        html, body {
+            height: 100%;
             margin: 0;
             padding: 0;
+            overflow: hidden;
         }
 
         body {
@@ -26,6 +28,82 @@
             background-repeat: no-repeat;
             background-attachment: scroll;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Desktop background - increased breakpoint */
+        @media (min-width: 1024px) {
+            body {
+                background-image: url('DesktopBG.png?v=2');
+                background-size: cover;
+                background-position: center;
+                background-attachment: fixed;
+            }
+        }
+
+        /* Tablet breakpoint */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            body {
+                background-image: url('DesktopBG.png?v=2');
+                background-size: cover;
+                background-position: center;
+                background-attachment: fixed;
+            }
+        }
+
+        /* Hamburger menu button */
+        .menu-button {
+            position: fixed;
+            top: 5vh;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            z-index: 1000;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .menu-button img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: invert(1);
+        }
+
+        /* Menu overlay */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(128, 128, 128, 0.95);
+            z-index: 999;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .menu-overlay.active {
+            display: flex;
+        }
+
+        .menu-overlay a {
+            color: white;
+            text-decoration: none;
+            font-size: 24px;
+            font-weight: 300;
+            transition: transform 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .menu-overlay a:hover {
+            transform: scale(1.1);
         }
 
         /* Photo gallery container */
@@ -41,8 +119,26 @@
             z-index: 1;
         }
 
-        .gallery::-webkit-scrollbar {
-            display: none;
+        /* Desktop horizontal layout */
+        @media (min-width: 1024px) {
+            .gallery {
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                gap: 3vw;
+                padding: 0 5vw;
+            }
+        }
+
+        /* Tablet layout */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .gallery {
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                gap: 2vw;
+                padding: 0 3vw;
+            }
         }
 
         .photo {
@@ -67,6 +163,52 @@
         .photo.active {
             opacity: 1;
             pointer-events: auto;
+        }
+
+        /* Desktop layout - all photos visible in a row */
+        @media (min-width: 1024px) {
+            .photo {
+                position: relative;
+                width: 25vw;
+                height: 70vh;
+                opacity: 1;
+                pointer-events: auto;
+                transition: transform 0.3s ease, box-shadow 0.3s ease, z-index 0s;
+                z-index: 1;
+            }
+
+            .photo:hover {
+                transform: scale(1.15);
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+                z-index: 10;
+            }
+
+            .photo.active {
+                opacity: 1;
+            }
+        }
+
+        /* Tablet layout */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .photo {
+                position: relative;
+                width: 28vw;
+                height: 65vh;
+                opacity: 1;
+                pointer-events: auto;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                z-index: 1;
+            }
+
+            .photo:hover {
+                transform: scale(1.1);
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+                z-index: 10;
+            }
+
+            .photo.active {
+                opacity: 1;
+            }
         }
 
         /* Fullscreen zoom modal */
@@ -101,114 +243,26 @@
             -ms-user-select: none;
             user-select: none;
         }
-
-        /* Phone-specific optimizations */
-        @media (max-width: 768px) {
-            body {
-                background-attachment: scroll; /* Better performance on mobile */
-            }
-            
-            .photo {
-                width: 80vw;
-                height: 80vh;
-            }
-        }
-
-        /* Hamburger menu button */
-        .menu-button {
-            position: fixed;
-            top: 5vh;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-            z-index: 10000;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .menu-button img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        /* Menu overlay */
-        .menu-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(128, 128, 128, 0.95);
-            z-index: 9998;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .menu-overlay.active {
-            display: flex;
-        }
-
-        .menu-content {
-            display: flex;
-            flex-direction: column;
-            gap: 40px;
-            text-align: center;
-        }
-
-        .menu-item {
-            color: white;
-            font-size: clamp(1.8rem, 5vw, 2.5rem);
-            text-decoration: none;
-            font-weight: 300;
-            letter-spacing: 0.05em;
-            transition: opacity 0.3s ease;
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-
-        .menu-item:hover,
-        .menu-item:active {
-            opacity: 0.7;
-        }
-
-        /* Netlify badge - remove this if you don't want it */
-        .netlify-badge {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            font-size: 10px;
-            color: rgba(255, 255, 255, 0.6);
-            z-index: 1000;
-        }
-
-        @media (max-width: 768px) {
-            .netlify-badge {
-                display: none;
-            }
-        }
     </style>
 </head>
 <body>
-    <!-- Hamburger menu button -->
-    <div class="menu-button" id="menuButton">
-        <img src="menu.png" alt="Menu">
+    <!-- Debug info -->
+    <div style="position: fixed; top: 10px; right: 10px; background: rgba(255,255,255,0.9); padding: 10px; border-radius: 5px; z-index: 10000; font-size: 12px; font-family: monospace;">
+        <div>Screen: <span id="screenWidth">0</span> x <span id="screenHeight">0</span></div>
+        <div>Mode: <span id="screenMode">Loading...</span></div>
     </div>
+
+    <!-- Hamburger menu button -->
+    <button class="menu-button" id="menuButton">
+        <img src="menu.png" alt="Menu">
+    </button>
 
     <!-- Menu overlay -->
     <div class="menu-overlay" id="menuOverlay">
-        <div class="menu-content">
-            <a href="#contact" class="menu-item">Contact</a>
-            <a href="https://www.instagram.com/ghost1ygirl/" target="_blank" class="menu-item">Instagram</a>
-            <a href="https://www.tiktok.com/@ghost1ygirl" target="_blank" class="menu-item">TikTok</a>
-            <a href="#about" class="menu-item">About Me</a>
-        </div>
+        <a href="https://www.instagram.com/ghost1ygirl/" target="_blank">Instagram</a>
+        <a href="https://www.tiktok.com/@ghost1ygirl" target="_blank">TikTok</a>
+        <a href="#contact">Contact</a>
+        <a href="#about">About Me</a>
     </div>
 
     <div class="gallery">
@@ -222,24 +276,33 @@
         <img src="" alt="Zoomed photo" id="zoomedImage">
     </div>
 
-    <div class="netlify-badge">
-        Deployed on Netlify
-    </div>
-
     <script>
-        // Progressive enhancement and performance optimizations
         document.addEventListener('DOMContentLoaded', function() {
-            // Lazy load background image for better performance
-            const img = new Image();
-            img.onload = function() {
-                document.body.classList.add('bg-loaded');
-            };
-            img.src = 'BlackBG2.png?v=1';
+            // Debug display
+            function updateDebugInfo() {
+                document.getElementById('screenWidth').textContent = window.innerWidth;
+                document.getElementById('screenHeight').textContent = window.innerHeight;
+                let mode = 'Mobile';
+                if (window.innerWidth >= 1024) mode = 'Desktop';
+                else if (window.innerWidth >= 768) mode = 'Tablet';
+                document.getElementById('screenMode').textContent = mode;
+            }
+            updateDebugInfo();
+            window.addEventListener('resize', updateDebugInfo);
 
-            // Add smooth scroll behavior
-            document.documentElement.style.scrollBehavior = 'smooth';
+            // Menu toggle
+            const menuButton = document.getElementById('menuButton');
+            const menuOverlay = document.getElementById('menuOverlay');
+            
+            menuButton.addEventListener('click', function() {
+                menuOverlay.classList.toggle('active');
+            });
+            
+            menuOverlay.addEventListener('click', function() {
+                menuOverlay.classList.remove('active');
+            });
 
-            // Swipe carousel functionality
+            // Swipe carousel functionality (mobile only)
             const photos = document.querySelectorAll('.photo');
             const gallery = document.querySelector('.gallery');
             let currentIndex = 0;
@@ -247,13 +310,23 @@
             let touchEndX = 0;
             
             function showPhoto(index) {
-                photos.forEach((photo, i) => {
-                    photo.classList.remove('active');
-                });
-                photos[index].classList.add('active');
+                // Only apply on mobile (below 768px)
+                if (window.innerWidth < 768) {
+                    photos.forEach((photo, i) => {
+                        photo.classList.remove('active');
+                    });
+                    photos[index].classList.add('active');
+                } else {
+                    // On tablet/desktop, show all photos
+                    photos.forEach(photo => {
+                        photo.classList.add('active');
+                    });
+                }
             }
             
             function handleSwipe() {
+                if (window.innerWidth >= 768) return; // Disable swipe on desktop
+                
                 if (touchEndX < touchStartX - 50) {
                     // Swipe left - next photo
                     currentIndex = (currentIndex + 1) % photos.length;
@@ -276,20 +349,10 @@
             
             // Initial photo display
             showPhoto(0);
-
-            // Menu toggle functionality
-            const menuButton = document.getElementById('menuButton');
-            const menuOverlay = document.getElementById('menuOverlay');
             
-            menuButton.addEventListener('click', function() {
-                menuOverlay.classList.toggle('active');
-            });
-            
-            // Close menu when clicking overlay or menu item
-            menuOverlay.addEventListener('click', function(e) {
-                if (e.target === menuOverlay || e.target.classList.contains('menu-item')) {
-                    menuOverlay.classList.remove('active');
-                }
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                showPhoto(currentIndex);
             });
 
             // Zoom functionality
@@ -310,13 +373,6 @@
                 zoomModal.classList.remove('active');
                 document.body.style.overflow = '';
             });
-        });
-
-        // Handle orientation changes on mobile
-        window.addEventListener('orientationchange', function() {
-            setTimeout(function() {
-                window.scrollTo(0, 0);
-            }, 100);
         });
     </script>
 </body>
