@@ -30,10 +30,20 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* Desktop background */
-        @media (min-width: 768px) {
+        /* Desktop background - increased breakpoint */
+        @media (min-width: 1024px) {
             body {
-                background-image: url('DesktopBG.png?v=1');
+                background-image: url('DesktopBG.png?v=2');
+                background-size: cover;
+                background-position: center;
+                background-attachment: fixed;
+            }
+        }
+
+        /* Tablet breakpoint */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            body {
+                background-image: url('DesktopBG.png?v=2');
                 background-size: cover;
                 background-position: center;
                 background-attachment: fixed;
@@ -110,13 +120,24 @@
         }
 
         /* Desktop horizontal layout */
-        @media (min-width: 768px) {
+        @media (min-width: 1024px) {
             .gallery {
                 flex-direction: row;
                 justify-content: center;
                 align-items: center;
                 gap: 3vw;
                 padding: 0 5vw;
+            }
+        }
+
+        /* Tablet layout */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .gallery {
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                gap: 2vw;
+                padding: 0 3vw;
             }
         }
 
@@ -145,7 +166,7 @@
         }
 
         /* Desktop layout - all photos visible in a row */
-        @media (min-width: 768px) {
+        @media (min-width: 1024px) {
             .photo {
                 position: relative;
                 width: 25vw;
@@ -163,7 +184,29 @@
             }
 
             .photo.active {
-                /* All photos visible on desktop */
+                opacity: 1;
+            }
+        }
+
+        /* Tablet layout */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .photo {
+                position: relative;
+                width: 28vw;
+                height: 65vh;
+                opacity: 1;
+                pointer-events: auto;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                z-index: 1;
+            }
+
+            .photo:hover {
+                transform: scale(1.1);
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+                z-index: 10;
+            }
+
+            .photo.active {
                 opacity: 1;
             }
         }
@@ -203,6 +246,12 @@
     </style>
 </head>
 <body>
+    <!-- Debug info -->
+    <div style="position: fixed; top: 10px; right: 10px; background: rgba(255,255,255,0.9); padding: 10px; border-radius: 5px; z-index: 10000; font-size: 12px; font-family: monospace;">
+        <div>Screen: <span id="screenWidth">0</span> x <span id="screenHeight">0</span></div>
+        <div>Mode: <span id="screenMode">Loading...</span></div>
+    </div>
+
     <!-- Hamburger menu button -->
     <button class="menu-button" id="menuButton">
         <img src="menu.png" alt="Menu">
@@ -229,6 +278,18 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Debug display
+            function updateDebugInfo() {
+                document.getElementById('screenWidth').textContent = window.innerWidth;
+                document.getElementById('screenHeight').textContent = window.innerHeight;
+                let mode = 'Mobile';
+                if (window.innerWidth >= 1024) mode = 'Desktop';
+                else if (window.innerWidth >= 768) mode = 'Tablet';
+                document.getElementById('screenMode').textContent = mode;
+            }
+            updateDebugInfo();
+            window.addEventListener('resize', updateDebugInfo);
+
             // Menu toggle
             const menuButton = document.getElementById('menuButton');
             const menuOverlay = document.getElementById('menuOverlay');
@@ -249,14 +310,14 @@
             let touchEndX = 0;
             
             function showPhoto(index) {
-                // Only apply on mobile
+                // Only apply on mobile (below 768px)
                 if (window.innerWidth < 768) {
                     photos.forEach((photo, i) => {
                         photo.classList.remove('active');
                     });
                     photos[index].classList.add('active');
                 } else {
-                    // On desktop, show all photos
+                    // On tablet/desktop, show all photos
                     photos.forEach(photo => {
                         photo.classList.add('active');
                     });
