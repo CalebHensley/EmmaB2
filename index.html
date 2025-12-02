@@ -54,8 +54,7 @@
         .menu-button {
             position: fixed;
             top: 5vh;
-            left: 50%;
-            transform: translateX(-50%);
+            right: 10vw;
             width: 60px;
             height: 60px;
             background: transparent;
@@ -173,8 +172,8 @@
         @media (min-width: 1024px) {
             .photo {
                 position: relative;
-                width: 28vw;
-                height: 75vh;
+                width: 25vw;
+                height: 70vh;
                 opacity: 1;
                 pointer-events: auto;
                 transition: transform 0.3s ease, box-shadow 0.3s ease, z-index 0s;
@@ -250,12 +249,6 @@
     </style>
 </head>
 <body>
-    <!-- Debug info -->
-    <div style="position: fixed; top: 10px; right: 10px; background: rgba(255,255,255,0.9); padding: 10px; border-radius: 5px; z-index: 10000; font-size: 12px; font-family: monospace;">
-        <div>Screen: <span id="screenWidth">0</span> x <span id="screenHeight">0</span></div>
-        <div>Mode: <span id="screenMode">Loading...</span></div>
-    </div>
-
     <!-- Hamburger menu button -->
     <button class="menu-button" id="menuButton">
         <img src="menu.png" alt="Menu">
@@ -282,18 +275,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Debug display
-            function updateDebugInfo() {
-                document.getElementById('screenWidth').textContent = window.innerWidth;
-                document.getElementById('screenHeight').textContent = window.innerHeight;
-                let mode = 'Mobile';
-                if (window.innerWidth >= 1024) mode = 'Desktop';
-                else if (window.innerWidth >= 768) mode = 'Tablet';
-                document.getElementById('screenMode').textContent = mode;
-            }
-            updateDebugInfo();
-            window.addEventListener('resize', updateDebugInfo);
-
             // Menu toggle
             const menuButton = document.getElementById('menuButton');
             const menuOverlay = document.getElementById('menuOverlay');
