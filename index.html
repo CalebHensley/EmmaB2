@@ -35,7 +35,7 @@
             body {
                 background-image: url('DesktopBG.png?v=2');
                 background-size: cover;
-                background-position: center;
+                background-position: top center;
                 background-attachment: fixed;
             }
         }
@@ -45,7 +45,7 @@
             body {
                 background-image: url('DesktopBG.png?v=2');
                 background-size: cover;
-                background-position: center;
+                background-position: top center;
                 background-attachment: fixed;
             }
         }
@@ -63,7 +63,12 @@
             cursor: pointer;
             z-index: 1000;
             padding: 0;
+            outline: none;
             -webkit-tap-highlight-color: transparent;
+        }
+
+        .menu-button:focus {
+            outline: none;
         }
 
         .menu-button img {
